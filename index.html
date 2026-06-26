@@ -34,6 +34,68 @@
             overflow: hidden;
         }
 
+        /* ===== ПОДСКАЗКА СВЕРХУ ===== */
+        .hint {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 50;
+            text-align: center;
+            padding: 18px 20px 14px;
+            background: linear-gradient(180deg, rgba(10, 5, 16, 0.85) 0%, transparent 100%);
+            pointer-events: none;
+            animation: hintFadeIn 1.5s ease;
+        }
+
+        @keyframes hintFadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hint .title {
+            font-size: 1.1rem;
+            color: #f5e6d3;
+            letter-spacing: 1px;
+            font-weight: 400;
+        }
+
+        .hint .title .highlight {
+            color: #ffd700;
+            font-weight: 700;
+        }
+
+        .hint .sub {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.35);
+            margin-top: 4px;
+            letter-spacing: 0.5px;
+            font-style: italic;
+        }
+
+        .hint .sub span {
+            display: inline-block;
+            animation: pulseHint 2s ease-in-out infinite;
+        }
+
+        @keyframes pulseHint {
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.4;
+            }
+            50% {
+                transform: scale(1.05);
+                opacity: 0.8;
+            }
+        }
+
         /* ===== ЗВЁЗДЫ ===== */
         .star {
             position: absolute;
@@ -225,7 +287,7 @@
             }
         }
 
-        /* ===== КОМПЛИМЕНТЫ (для отображения) ===== */
+        /* ===== СЧЁТЧИК ===== */
         .star-count {
             position: fixed;
             bottom: 30px;
@@ -282,59 +344,6 @@
             }
         }
 
-        /* ===== АДАПТИВ ===== */
-        @media (max-width: 480px) {
-            .compliment-popup {
-                padding: 24px 20px 24px;
-                max-width: 320px;
-                border-radius: 28px;
-            }
-            .compliment-popup .icon {
-                font-size: 2.6rem;
-            }
-            .compliment-popup .text {
-                font-size: 1rem;
-                line-height: 1.6;
-            }
-            .compliment-popup .close-btn {
-                font-size: 0.85rem;
-                padding: 12px 24px;
-            }
-            .star-count {
-                font-size: 0.7rem;
-                padding: 4px 12px;
-                bottom: 20px;
-            }
-        }
-
-        @media (max-width: 380px) {
-            .compliment-popup {
-                padding: 20px 16px 20px;
-                max-width: 280px;
-            }
-            .compliment-popup .text {
-                font-size: 0.9rem;
-            }
-        }
-
-        @media (orientation: landscape) and (max-height: 500px) {
-            .compliment-popup {
-                max-width: 300px;
-                padding: 20px 18px 20px;
-            }
-            .compliment-popup .icon {
-                font-size: 2rem;
-            }
-            .compliment-popup .text {
-                font-size: 0.9rem;
-                margin-bottom: 12px;
-            }
-            .compliment-popup .close-btn {
-                padding: 8px 20px;
-                font-size: 0.8rem;
-            }
-        }
-
         /* ===== СНЕЖИНКИ / ЗВЁЗДОЧКИ (ДОП ФОН) ===== */
         .sparkle {
             position: absolute;
@@ -360,6 +369,81 @@
                 opacity: 0;
             }
         }
+
+        /* ===== АДАПТИВ ===== */
+        @media (max-width: 480px) {
+            .hint .title {
+                font-size: 0.95rem;
+            }
+            .hint .sub {
+                font-size: 0.7rem;
+            }
+            .compliment-popup {
+                padding: 24px 20px 24px;
+                max-width: 320px;
+                border-radius: 28px;
+            }
+            .compliment-popup .icon {
+                font-size: 2.6rem;
+            }
+            .compliment-popup .text {
+                font-size: 1rem;
+                line-height: 1.6;
+            }
+            .compliment-popup .close-btn {
+                font-size: 0.85rem;
+                padding: 12px 24px;
+            }
+            .star-count {
+                font-size: 0.7rem;
+                padding: 4px 12px;
+                bottom: 20px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .hint .title {
+                font-size: 0.85rem;
+            }
+            .hint .sub {
+                font-size: 0.65rem;
+            }
+            .compliment-popup {
+                padding: 20px 16px 20px;
+                max-width: 280px;
+            }
+            .compliment-popup .text {
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (orientation: landscape) and (max-height: 500px) {
+            .hint {
+                padding: 10px 16px 8px;
+            }
+            .hint .title {
+                font-size: 0.85rem;
+            }
+            .hint .sub {
+                font-size: 0.65rem;
+                margin-top: 2px;
+            }
+            .compliment-popup {
+                max-width: 300px;
+                padding: 20px 18px 20px;
+            }
+            .compliment-popup .icon {
+                font-size: 2rem;
+            }
+            .compliment-popup .text {
+                font-size: 0.9rem;
+                margin-bottom: 12px;
+            }
+            .compliment-popup .close-btn {
+                padding: 8px 20px;
+                font-size: 0.8rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -367,6 +451,16 @@
     <!-- ЗАГРУЗКА -->
     <div class="loading" id="loading">
         <div class="spinner">⭐</div>
+    </div>
+
+    <!-- ===== ПОДСКАЗКА СВЕРХУ ===== -->
+    <div class="hint" id="hint">
+        <div class="title">
+            ✨ Нажимай на <span class="highlight">звёздочки</span>, чтобы увидеть комплименты ✨
+        </div>
+        <div class="sub">
+            <span>💫 каждая звезда — тёплое слово для тебя</span>
+        </div>
     </div>
 
     <!-- НЕБО -->
@@ -484,7 +578,7 @@
 
                 const size = 4 + Math.random() * 12;
                 const x = 5 + Math.random() * 90;
-                const y = 3 + Math.random() * 90;
+                const y = 5 + Math.random() * 85;
 
                 star.style.width = size + 'px';
                 star.style.height = size + 'px';
@@ -675,15 +769,12 @@
             }, 600);
 
             // =============================================
-            //  АДАПТАЦИЯ ПРИ ИЗМЕНЕНИИ РАЗМЕРА
+            //  АДАПТАЦИЯ
             // =============================================
             let resizeTimer;
             window.addEventListener('resize', function() {
                 clearTimeout(resizeTimer);
-                resizeTimer = setTimeout(() => {
-                    // Обновляем позиции звёзд (просто пересоздаём их, но без потери состояния)
-                    // Можно просто ничего не делать — звёзды адаптируются сами
-                }, 500);
+                resizeTimer = setTimeout(() => {}, 500);
             });
 
             console.log('⭐ Звёздное небо готово! ❤️');
