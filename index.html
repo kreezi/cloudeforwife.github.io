@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-    <title>Облако комплиментов для тебя ❤️</title>
+    <title>Облако комплиментов ❤️</title>
     <style>
         * {
             margin: 0;
@@ -16,20 +16,31 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
-            font-family: 'Georgia', 'Times New Roman', serif;
             background: #1a0b0b;
+            background-image: radial-gradient(ellipse at 50% 50%, rgba(200, 80, 80, 0.08) 0%, transparent 70%);
+            font-family: 'Georgia', 'Times New Roman', serif;
         }
 
-        /* ===== ОБЛАКО КОМПЛИМЕНТОВ (ВЕСЬ ЭКРАН) ===== */
+        /* ===== ОБЛАКО ===== */
         .cloud-container {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             pointer-events: none;
             z-index: 0;
-            overflow: hidden;
+        }
+
+        .cloud-wrapper {
+            position: relative;
+            width: 80vw;
+            height: 80vh;
+            max-width: 800px;
+            max-height: 600px;
         }
 
         .compliment-word {
@@ -38,38 +49,37 @@
             user-select: none;
             white-space: nowrap;
             font-family: 'Georgia', serif;
-            text-shadow: 0 0 40px rgba(255, 100, 100, 0.15);
-            transition: transform 0.3s ease, opacity 0.3s ease;
-            animation: floatCloud linear infinite;
+            text-shadow: 0 0 30px rgba(255, 100, 100, 0.10);
+            transition: transform 0.4s ease, opacity 0.4s ease;
+            animation: floatWord 6s ease-in-out infinite alternate;
             will-change: transform, opacity;
         }
 
         .compliment-word:hover {
-            transform: scale(1.5) !important;
+            transform: scale(1.6) !important;
             opacity: 0.9 !important;
             cursor: default;
             z-index: 10;
             transition: transform 0.2s ease, opacity 0.2s ease;
         }
 
-        @keyframes floatCloud {
+        /* ===== АНИМАЦИЯ ДЛЯ КАЖДОГО СЛОВА ===== */
+        @keyframes floatWord {
             0% {
-                transform: translateX(-20vw) rotate(-8deg) scale(0.7);
-                opacity: 0;
+                transform: translate(0px, 0px) scale(1);
             }
-            5% {
-                opacity: 0.5;
+            33% {
+                transform: translate(8px, -12px) scale(1.05);
             }
-            90% {
-                opacity: 0.5;
+            66% {
+                transform: translate(-6px, 10px) scale(0.95);
             }
             100% {
-                transform: translateX(120vw) rotate(8deg) scale(1.1);
-                opacity: 0;
+                transform: translate(4px, -6px) scale(1.02);
             }
         }
 
-        /* ===== ПАДАЮЩИЕ СЕРДЕЧКИ ===== */
+        /* ===== ПАДАЮЩИЕ СЕРДЕЧКИ (ЛЁГКИЙ ФОН) ===== */
         .hearts-bg {
             position: fixed;
             top: 0;
@@ -83,8 +93,8 @@
 
         .heart-float {
             position: absolute;
-            font-size: 1.4rem;
-            opacity: 0.10;
+            font-size: 1.2rem;
+            opacity: 0.06;
             animation: fall linear infinite;
             user-select: none;
         }
@@ -95,481 +105,167 @@
                 opacity: 0;
             }
             10% {
-                opacity: 0.15;
+                opacity: 0.08;
             }
             90% {
-                opacity: 0.15;
+                opacity: 0.08;
             }
             100% {
-                transform: translateY(110vh) rotate(720deg) scale(1.3);
+                transform: translateY(110vh) rotate(720deg) scale(1.2);
                 opacity: 0;
             }
         }
 
-        /* ===== ЦЕНТРАЛЬНАЯ КАРТОЧКА (ПРОЗРАЧНАЯ) ===== */
-        .center-card {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 2;
-            max-width: 480px;
-            width: 90%;
-            background: rgba(255, 248, 245, 0.88);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-radius: 60px;
-            padding: 40px 32px 36px;
-            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.60),
-                        0 0 0 1px rgba(255, 200, 180, 0.10),
-                        inset 0 1px 0 rgba(255, 255, 255, 0.5);
-            border: 1px solid rgba(255, 215, 200, 0.20);
-            text-align: center;
-            animation: fadeInUp 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-            pointer-events: auto;
-        }
-
-        @keyframes fadeInUp {
-            0% {
-                opacity: 0;
-                transform: translate(-50%, -50%) scale(0.92) translateY(40px);
-            }
-            100% {
-                opacity: 1;
-                transform: translate(-50%, -50%) scale(1) translateY(0);
-            }
-        }
-
-        .center-card .icon-top {
-            font-size: 3.8rem;
-            display: block;
-            margin-bottom: 4px;
-            animation: floatHeart 3.6s ease-in-out infinite;
-        }
-
-        @keyframes floatHeart {
-            0%,
-            100% {
-                transform: translateY(0) scale(1);
-            }
-            50% {
-                transform: translateY(-12px) scale(1.05);
-            }
-        }
-
-        .center-card h1 {
-            font-size: 2rem;
-            color: #2a1212;
-            margin-bottom: 4px;
-            font-weight: 700;
-            letter-spacing: -0.3px;
-        }
-
-        .center-card h1 .accent {
-            background: linear-gradient(135deg, #c0392b, #e85a5a, #c0392b);
-            background-size: 200% 200%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: shimmerText 5s ease-in-out infinite;
-        }
-
-        @keyframes shimmerText {
-            0%,
-            100% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
-        }
-
-        .center-card .sub {
-            font-size: 1rem;
-            color: #7a4a4a;
-            font-style: italic;
-            margin-bottom: 14px;
-            border-top: 1px solid rgba(200, 160, 160, 0.15);
-            padding-top: 12px;
-            display: inline-block;
-        }
-
-        .center-card .sub span {
-            display: inline-block;
-            animation: pulseHeart 2s ease-in-out infinite;
-        }
-
-        @keyframes pulseHeart {
-            0%,
-            100% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.2);
-            }
-        }
-
-        .center-card .message {
-            font-size: 0.95rem;
-            line-height: 1.8;
-            color: #3d2222;
-            background: rgba(255, 240, 235, 0.30);
-            padding: 16px 18px;
-            border-radius: 30px;
-            border-left: 3px solid #d4737a;
-            margin-bottom: 18px;
-            font-style: italic;
-        }
-
-        .center-card .message .heart {
-            color: #d4737a;
-        }
-
-        .btn-hearts {
-            padding: 14px 20px;
-            background: linear-gradient(135deg, #d4737a, #b84a4a, #d4737a);
-            background-size: 200% 200%;
-            border: none;
-            border-radius: 60px;
-            color: #fff;
-            font-weight: 700;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-            box-shadow: 0 10px 36px rgba(212, 115, 122, 0.28);
-            font-family: 'Georgia', serif;
-            animation: btnGlow 4s ease-in-out infinite;
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            pointer-events: auto;
-        }
-
-        @keyframes btnGlow {
-            0%,
-            100% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
-        }
-
-        .btn-hearts:hover {
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 16px 48px rgba(212, 115, 122, 0.35);
-        }
-
-        .btn-hearts:active {
-            transform: translateY(0) scale(0.97);
-        }
-
-        .btn-hearts.secondary {
-            background: linear-gradient(135deg, #b84a4a, #8a2a2a, #b84a4a);
-            margin-top: 10px;
-        }
-
-        .response-message {
-            margin-top: 16px;
-            padding: 14px 18px;
-            background: linear-gradient(145deg, #f0f7ee, #e6f0e4);
-            border-radius: 40px;
-            border: 1px solid rgba(100, 200, 120, 0.12);
-            display: none;
-            animation: fadePop 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
-            font-size: 1rem;
-            color: #1a4a1a;
-        }
-
-        .response-message.show {
-            display: block;
-        }
-
-        @keyframes fadePop {
-            0% {
-                opacity: 0;
-                transform: scale(0.92) translateY(20px);
-            }
-            100% {
-                opacity: 1;
-                transform: scale(1) translateY(0);
-            }
-        }
-
-        .response-message .big {
-            font-size: 2.4rem;
-            display: block;
-            margin-bottom: 2px;
-        }
-
-        .footer {
-            margin-top: 18px;
-            font-size: 0.8rem;
-            color: #8a6a6a;
-            border-top: 1px solid rgba(200, 160, 160, 0.10);
-            padding-top: 14px;
-            font-style: italic;
-            letter-spacing: 0.3px;
-        }
-
-        .footer span {
-            animation: pulseHeart 2.6s ease-in-out infinite;
-            display: inline-block;
-        }
-
-        @media (max-width: 480px) {
-            .center-card {
-                padding: 28px 18px 28px;
-                border-radius: 44px;
-                width: 92%;
-                max-width: 400px;
-            }
-            .center-card h1 {
-                font-size: 1.6rem;
-            }
-            .center-card .icon-top {
-                font-size: 3rem;
-            }
-            .center-card .message {
-                font-size: 0.85rem;
-                padding: 12px 14px;
-            }
-            .btn-hearts {
-                font-size: 0.9rem;
-                padding: 12px 18px;
-            }
-            .compliment-word {
-                font-size: 1.2rem !important;
-            }
-        }
-
-        @media (max-width: 380px) {
-            .center-card h1 {
-                font-size: 1.3rem;
-            }
-            .center-card .sub {
-                font-size: 0.85rem;
-            }
-            .compliment-word {
-                font-size: 1rem !important;
+        /* ===== АДАПТИВ ===== */
+        @media (max-width: 600px) {
+            .cloud-wrapper {
+                width: 92vw;
+                height: 85vh;
+                max-width: 100%;
+                max-height: 100%;
             }
         }
     </style>
 </head>
 <body>
 
-    <!-- ===== ОБЛАКО КОМПЛИМЕНТОВ (ВЕСЬ ЭКРАН) ===== -->
-    <div class="cloud-container" id="cloudContainer"></div>
-
     <!-- ===== ПАДАЮЩИЕ СЕРДЕЧКИ ===== -->
     <div class="hearts-bg" id="heartsBg"></div>
 
-    <!-- ===== ЦЕНТРАЛЬНАЯ КАРТОЧКА ===== -->
-    <div class="center-card">
-        <span class="icon-top">💫</span>
-        <h1>Облако <span class="accent">комплиментов</span></h1>
-        <div class="sub">Для моей <span>❤️</span> любимой жены</div>
-
-        <div class="message">
-            <span class="heart">💖</span>
-            Каждое слово в этом облаке — о тебе.
-            <br>
-            Просто смотри и улыбайся.
-            <br><br>
-            <span style="font-size: 0.8rem; opacity: 0.7;">(наведи на слово — оно увеличится)</span>
-        </div>
-
-        <button class="btn-hearts" id="loveBtn">
-            <span>💝</span> Показать ещё любви <span>💝</span>
-        </button>
-
-        <button class="btn-hearts secondary" id="goToInviteBtn">
-            <span>💌</span> Перейти к приглашению <span>💌</span>
-        </button>
-
-        <div class="response-message" id="responseMessage">
-            <span class="big">🥰</span>
-            Ты — самое прекрасное, что есть в моей жизни!
-            <br>
-            <span style="font-size: 0.85rem; opacity: 0.7;">Облако обновилось специально для тебя ❤️</span>
-        </div>
-
-        <div class="footer">
-            <span>🌹</span> Навсегда твой <span>🌹</span>
-        </div>
+    <!-- ===== ОБЛАКО ===== -->
+    <div class="cloud-container">
+        <div class="cloud-wrapper" id="cloudWrapper"></div>
     </div>
 
     <script>
         (function() {
             // =============================================
-            //  МАССИВ КОМПЛИМЕНТОВ
+            //  КОМПЛИМЕНТЫ
             // =============================================
-            const complimentsList = [
-                '❤️ Любимая',
-                '⭐ Ты — моя звезда',
-                '💖 Самая красивая',
-                '✨ Ты — свет',
-                '🌺 Прекрасная',
-                '💕 Моя радость',
-                '🌟 Самая лучшая',
-                '💗 Неповторимая',
-                '🌸 Нежная как цветок',
-                '❤️ Ты — моё сердце',
-                '✨ Солнышко',
-                '💖 Моя муза',
-                '⭐ Ты — мечта',
-                '💕 Единственная',
-                '❤️ Моя гордость',
-                '✨ Великолепная',
-                '💖 Моя жизнь',
-                '⭐ Неотразимая',
-                '🌸 Идеальная',
-                '💕 Потрясающая',
-                '❤️ Божественная',
-                '✨ Невероятная',
-                '💖 Моя королева',
-                '⭐ Самая нежная',
-                '🌸 Обаятельная',
-                '💕 Сияющая',
-                '❤️ Родная',
-                '✨ Удивительная',
-                '💖 Мой ангел',
-                '⭐ Чудесная',
-                '🌸 Вдохновение',
-                '💕 Самая добрая',
-                '❤️ Лучик света',
-                '✨ Магия',
-                '💖 Страсть моя',
-                '⭐ Лучшая жена',
-                '🌸 Моя вселенная',
-                '💕 Ты — воздух',
-                '❤️ Моя сказка',
-                '✨ Яркая',
-                '💖 Искренняя',
-                '⭐ Мой мир',
-                '🌸 Теплая',
-                '💕 Ласковая',
-                '❤️ Лучшая подруга',
-                '✨ Моя сила',
-                '💖 Крылья',
-                '⭐ Надежда',
-                '🌸 Уютная',
-                '💕 Родная душа',
-                '❤️ Красота',
-                '✨ Счастье',
-                '💖 Моя отрада',
-                '⭐ Мой цветочек',
-                '🌸 Моя конфетка',
-                '💕 Моя булочка',
-                '❤️ Лучшая жена на свете',
-                '✨ Ты — идеальная жена',
-                '💖 Я горжусь тобой',
-                '⭐ С тобой я стал лучше',
-                '🌸 Ты делаешь меня счастливым',
-                '💕 Ты — моя опора',
-                '❤️ Ты — моя поддержка',
-                '✨ Спасибо, что ты есть',
-                '💖 Ты — лучший подарок судьбы',
+            const compliments = [
+                '❤️ Любимая', '⭐ Ты — моя звезда', '💖 Самая красивая',
+                '✨ Ты — свет', '🌺 Прекрасная', '💕 Моя радость',
+                '🌟 Самая лучшая', '💗 Неповторимая', '🌸 Нежная как цветок',
+                '❤️ Ты — моё сердце', '✨ Солнышко', '💖 Моя муза',
+                '⭐ Ты — мечта', '💕 Единственная', '❤️ Моя гордость',
+                '✨ Великолепная', '💖 Моя жизнь', '⭐ Неотразимая',
+                '🌸 Идеальная', '💕 Потрясающая', '❤️ Божественная',
+                '✨ Невероятная', '💖 Моя королева', '⭐ Самая нежная',
+                '🌸 Обаятельная', '💕 Сияющая', '❤️ Родная',
+                '✨ Удивительная', '💖 Мой ангел', '⭐ Чудесная',
+                '🌸 Вдохновение', '💕 Самая добрая', '❤️ Лучик света',
+                '✨ Магия', '💖 Страсть моя', '⭐ Лучшая жена',
+                '🌸 Моя вселенная', '💕 Ты — воздух', '❤️ Моя сказка',
+                '✨ Яркая', '💖 Искренняя', '⭐ Мой мир',
+                '🌸 Теплая', '💕 Ласковая', '❤️ Лучшая подруга',
+                '✨ Моя сила', '💖 Крылья', '⭐ Надежда',
+                '🌸 Уютная', '💕 Родная душа', '❤️ Красота',
+                '✨ Счастье', '💖 Моя отрада', '⭐ Мой цветочек',
+                '🌸 Моя конфетка', '💕 Моя булочка', '❤️ Лучшая жена на свете',
+                '✨ Ты — идеальная жена', '💖 Я горжусь тобой',
+                '⭐ С тобой я стал лучше', '🌸 Ты делаешь меня счастливым',
+                '💕 Ты — моя опора', '❤️ Ты — моя поддержка',
+                '✨ Спасибо, что ты есть', '💖 Ты — лучший подарок судьбы',
                 '⭐ Я каждый день влюбляюсь в тебя заново',
-                '🌸 Ты — моя главная награда',
-                '💕 Ты — моя победа',
-                '❤️ Ты — мой тыл',
-                '✨ Ты — мой фронт',
-                '💖 Без тебя я никто',
-                '⭐ Ты — мой компас',
-                '🌸 Ты — мой путь',
-                '💕 Ты — мой рассвет',
-                '❤️ Ты — мой закат',
-                '✨ Ты — моя весна',
-                '💖 Ты — моё лето',
-                '⭐ Ты — моя осень',
-                '🌸 Ты — моя зима',
-                '💕 Ты — мой день',
-                '❤️ Ты — моя ночь',
-                '✨ Ты — моя планета',
-                '💖 Ты — моя галактика',
-                '⭐ Ты — всё',
-                '🌸 Ты — космос',
-                '💕 Ты — магия',
-                '❤️ Ты — свет',
-                '✨ Ты — тепло',
-                '💖 Ты — нежность',
-                '⭐ Ты — страсть',
-                '🌸 Ты — жизнь',
-                '💕 Ты — мир',
-                '❤️ Ты — сон',
-                '✨ Ты — явь',
-                '💖 Ты — луч',
-                '⭐ Ты — огонь',
-                '🌸 Ты — вода',
-                '💕 Моя любимая жена',
-                '❤️ Ты — моя богиня',
-                '✨ Ты — моя фея',
-                '💖 Ты — моя звёздочка',
-                '⭐ Ты — моя ягодка',
-                '🌸 Ты — моя сладость',
-                '💕 Ты — мой пряник',
-                '❤️ Ты — мой пирожок',
-                '✨ Ты — мой зефир',
-                '💖 Ты — моя мармеладка'
+                '🌸 Ты — моя главная награда', '💕 Ты — моя победа',
+                '❤️ Ты — мой тыл', '✨ Ты — мой фронт',
+                '💖 Без тебя я никто', '⭐ Ты — мой компас',
+                '🌸 Ты — мой путь', '💕 Ты — мой рассвет',
+                '❤️ Ты — мой закат', '✨ Ты — моя весна',
+                '💖 Ты — моё лето', '⭐ Ты — моя осень',
+                '🌸 Ты — моя зима', '💕 Ты — мой день',
+                '❤️ Ты — моя ночь', '✨ Ты — моя планета',
+                '💖 Ты — моя галактика', '⭐ Ты — всё',
+                '🌸 Ты — космос', '💕 Ты — магия',
+                '❤️ Ты — свет', '✨ Ты — тепло',
+                '💖 Ты — нежность', '⭐ Ты — страсть',
+                '🌸 Ты — жизнь', '💕 Ты — мир',
+                '❤️ Ты — сон', '✨ Ты — явь',
+                '💖 Ты — луч', '⭐ Ты — огонь',
+                '🌸 Ты — вода', '💕 Моя любимая жена',
+                '❤️ Ты — моя богиня', '✨ Ты — моя фея',
+                '💖 Ты — моя звёздочка', '⭐ Ты — моя ягодка',
+                '🌸 Ты — моя сладость', '💕 Ты — мой пряник',
+                '❤️ Ты — мой пирожок', '✨ Ты — мой зефир',
+                '💖 Ты — моя мармеладка', '⭐ Самая нежная',
+                '❤️ Мой ангел', '✨ Солнышко', '💖 Моя муза',
+                '🌸 Моя конфетка', '💕 Ты — воздух', '⭐ Моя сказка'
             ];
 
             // =============================================
-            //  ГЕНЕРАЦИЯ ОБЛАКА (ВЕСЬ ЭКРАН)
+            //  СОЗДАНИЕ ОБЛАКА
             // =============================================
-            function generateCloud(words) {
-                const container = document.getElementById('cloudContainer');
-                container.innerHTML = '';
+            function createCloud() {
+                const wrapper = document.getElementById('cloudWrapper');
+                wrapper.innerHTML = '';
 
-                // Перемешиваем
-                const shuffled = [...words];
+                const width = wrapper.offsetWidth || 800;
+                const height = wrapper.offsetHeight || 600;
+
+                // Центр облака
+                const centerX = width / 2;
+                const centerY = height / 2;
+
+                // Размер облака (радиус)
+                const cloudRadiusX = width * 0.38;
+                const cloudRadiusY = height * 0.38;
+
+                // Перемешиваем комплименты
+                const shuffled = [...compliments];
                 for (let i = shuffled.length - 1; i > 0; i--) {
                     const j = Math.floor(Math.random() * (i + 1));
                     [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
                 }
 
-                // Берём до 100 слов для облака
-                const selected = shuffled.slice(0, 100);
+                // Берём все слова
+                const totalWords = shuffled.length;
 
-                selected.forEach((word) => {
+                shuffled.forEach((word, index) => {
                     const el = document.createElement('span');
                     el.className = 'compliment-word';
                     el.textContent = word;
 
-                    // Случайное положение по ВСЕМУ экрану
-                    const top = 2 + Math.random() * 94;
-                    el.style.top = top + '%';
+                    // === РАСПРЕДЕЛЕНИЕ ПО ОБЛАКУ ===
+                    // Чем ближе к центру — тем больше слов
+                    const angle = Math.random() * Math.PI * 2;
 
-                    // Случайный размер
-                    const size = 1.2 + Math.random() * 3.0;
+                    // Радиус с распределением: больше слов ближе к центру
+                    const r = Math.pow(Math.random(), 0.7) * Math.min(cloudRadiusX, cloudRadiusY);
+                    const x = centerX + Math.cos(angle) * r;
+                    const y = centerY + Math.sin(angle) * r * 0.85; // чуть сжато по вертикали
+
+                    // Случайный размер: от маленького к большому
+                    const size = 0.9 + Math.random() * 2.2;
                     el.style.fontSize = size + 'rem';
 
-                    // Случайная задержка старта
-                    const delay = Math.random() * 25;
-                    el.style.animationDelay = delay + 's';
-
-                    // Случайная скорость
-                    const duration = 20 + Math.random() * 35;
-                    el.style.animationDuration = duration + 's';
-
-                    // Случайная прозрачность
-                    el.style.opacity = 0.15 + Math.random() * 0.40;
-
                     // Случайный поворот
-                    const rotation = -15 + Math.random() * 30;
+                    const rotation = -20 + Math.random() * 40;
                     el.style.transform = `rotate(${rotation}deg)`;
 
-                    // Случайный цвет (оттенки розового/красного)
+                    // Случайный цвет (оттенки розового)
                     const hue = 330 + Math.random() * 30;
                     const lightness = 55 + Math.random() * 30;
-                    el.style.color = `hsla(${hue}, 75%, ${lightness}%, 0.50)`;
+                    el.style.color = `hsla(${hue}, 75%, ${lightness}%, 0.60)`;
 
-                    container.appendChild(el);
+                    // Случайная прозрачность
+                    el.style.opacity = 0.3 + Math.random() * 0.40;
+
+                    // Случайная задержка анимации
+                    el.style.animationDelay = (Math.random() * 5) + 's';
+
+                    // Случайная скорость анимации
+                    const duration = 4 + Math.random() * 4;
+                    el.style.animationDuration = duration + 's';
+
+                    // Позиция
+                    el.style.left = (x / width * 100) + '%';
+                    el.style.top = (y / height * 100) + '%';
+                    el.style.transform += ` translate(-50%, -50%)`;
+
+                    wrapper.appendChild(el);
                 });
 
-                console.log('✨ Облако обновлено! Количество слов:', selected.length);
+                console.log('☁️ Облако создано! Слов:', totalWords);
             }
 
             // =============================================
@@ -578,94 +274,36 @@
             function createHearts() {
                 const container = document.getElementById('heartsBg');
                 const emojis = ['❤️', '♥️', '💕', '💖', '🌸', '✨'];
-                for (let i = 0; i < 35; i++) {
+                for (let i = 0; i < 30; i++) {
                     const el = document.createElement('span');
                     el.className = 'heart-float';
                     el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
                     el.style.left = Math.random() * 100 + '%';
-                    el.style.fontSize = (0.8 + Math.random() * 1.6) + 'rem';
-                    el.style.animationDuration = (14 + Math.random() * 28) + 's';
-                    el.style.animationDelay = (Math.random() * 22) + 's';
+                    el.style.fontSize = (0.8 + Math.random() * 1.4) + 'rem';
+                    el.style.animationDuration = (15 + Math.random() * 25) + 's';
+                    el.style.animationDelay = (Math.random() * 20) + 's';
                     container.appendChild(el);
                 }
             }
 
             // =============================================
-            //  ИНИЦИАЛИЗАЦИЯ
+            //  ЗАПУСК
             // =============================================
-            let currentCompliments = [...complimentsList];
-            generateCloud(currentCompliments);
             createHearts();
 
-            console.log('❤️ Облако комплиментов загружено! Количество комплиментов:', currentCompliments.length);
-
-            // =============================================
-            //  КНОПКА "ПОКАЗАТЬ ЕЩЁ ЛЮБВИ"
-            // =============================================
-            const loveBtn = document.getElementById('loveBtn');
-            const goToInviteBtn = document.getElementById('goToInviteBtn');
-            const responseMessage = document.getElementById('responseMessage');
-
-            loveBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-
-                // Перемешиваем и обновляем облако
-                const shuffled = [...currentCompliments];
-                for (let i = shuffled.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-                }
-                currentCompliments = shuffled;
-                generateCloud(currentCompliments);
-
-                // Показываем сообщение
-                responseMessage.classList.add('show');
-                responseMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-                if (navigator.vibrate) {
-                    navigator.vibrate(20);
-                }
-
-                const messages = [
-                    '💕 Ещё немного любви',
-                    '❤️ Ты этого достойна',
-                    '💖 Бесконечная любовь',
-                    '🌹 Ты — моё всё',
-                    '✨ Ты сияешь',
-                    '💝 Люблю тебя!'
-                ];
-                loveBtn.innerHTML = `💕 ${messages[Math.floor(Math.random() * messages.length)]}`;
-
-                setTimeout(() => {
-                    responseMessage.classList.remove('show');
-                }, 4000);
+            // Создаём облако после загрузки
+            window.addEventListener('load', function() {
+                setTimeout(createCloud, 100);
             });
 
-            // =============================================
-            //  КНОПКА "ПЕРЕЙТИ К ПРИГЛАШЕНИЮ"
-            // =============================================
-            goToInviteBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                this.innerHTML = '⏳ Загрузка...';
-                this.disabled = true;
-
-                setTimeout(() => {
-                    window.location.href = 'invite.html';
-                }, 800);
-            });
-
-            // =============================================
-            //  АДАПТАЦИЯ
-            // =============================================
+            // Пересоздаём при изменении размера
             let resizeTimeout;
             window.addEventListener('resize', function() {
                 clearTimeout(resizeTimeout);
-                resizeTimeout = setTimeout(() => {
-                    generateCloud(currentCompliments);
-                }, 600);
+                resizeTimeout = setTimeout(createCloud, 400);
             });
 
-            console.log('❤️ Всё готово! Облако комплиментов работает на весь экран!');
+            console.log('☁️ Облако комплиментов готово! ❤️');
         })();
     </script>
 </body>
