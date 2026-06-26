@@ -11,29 +11,22 @@
             box-sizing: border-box;
         }
 
+        html,
         body {
-            min-height: 100vh;
-            background: #1a0b0b;
-            background-image: radial-gradient(ellipse at 30% 20%, rgba(200, 80, 80, 0.25) 0%, transparent 60%),
-                              radial-gradient(ellipse at 70% 80%, rgba(180, 60, 60, 0.20) 0%, transparent 55%),
-                              radial-gradient(ellipse at 50% 100%, rgba(140, 50, 50, 0.30) 0%, transparent 45%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            width: 100%;
+            height: 100%;
             overflow: hidden;
             font-family: 'Georgia', 'Times New Roman', serif;
-            position: relative;
-            height: 100vh;
-            width: 100vw;
+            background: #1a0b0b;
         }
 
-        /* ===== ОБЛАКО КОМПЛИМЕНТОВ ===== */
+        /* ===== ОБЛАКО КОМПЛИМЕНТОВ (ВЕСЬ ЭКРАН) ===== */
         .cloud-container {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
+            width: 100vw;
+            height: 100vh;
             pointer-events: none;
             z-index: 0;
             overflow: hidden;
@@ -48,28 +41,30 @@
             text-shadow: 0 0 40px rgba(255, 100, 100, 0.15);
             transition: transform 0.3s ease, opacity 0.3s ease;
             animation: floatCloud linear infinite;
+            will-change: transform, opacity;
         }
 
         .compliment-word:hover {
-            transform: scale(1.4) !important;
+            transform: scale(1.5) !important;
             opacity: 0.9 !important;
             cursor: default;
             z-index: 10;
+            transition: transform 0.2s ease, opacity 0.2s ease;
         }
 
         @keyframes floatCloud {
             0% {
-                transform: translateX(-20vw) rotate(-10deg) scale(0.6);
+                transform: translateX(-20vw) rotate(-8deg) scale(0.7);
                 opacity: 0;
             }
             5% {
-                opacity: 0.4;
+                opacity: 0.5;
             }
-            95% {
-                opacity: 0.4;
+            90% {
+                opacity: 0.5;
             }
             100% {
-                transform: translateX(120vw) rotate(10deg) scale(1.1);
+                transform: translateX(120vw) rotate(8deg) scale(1.1);
                 opacity: 0;
             }
         }
@@ -79,8 +74,8 @@
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
+            width: 100vw;
+            height: 100vh;
             pointer-events: none;
             z-index: 0;
             overflow: hidden;
@@ -89,7 +84,7 @@
         .heart-float {
             position: absolute;
             font-size: 1.4rem;
-            opacity: 0.12;
+            opacity: 0.10;
             animation: fall linear infinite;
             user-select: none;
         }
@@ -111,52 +106,61 @@
             }
         }
 
-        /* ===== ЦЕНТРАЛЬНАЯ КАРТОЧКА ===== */
+        /* ===== ЦЕНТРАЛЬНАЯ КАРТОЧКА (ПРОЗРАЧНАЯ) ===== */
         .center-card {
-            position: relative;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             z-index: 2;
             max-width: 480px;
             width: 90%;
-            background: rgba(255, 248, 245, 0.92);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
+            background: rgba(255, 248, 245, 0.88);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border-radius: 60px;
-            padding: 48px 36px 44px;
-            box-shadow: 0 40px 100px rgba(0,0,0,0.60),
+            padding: 40px 32px 36px;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.60),
                         0 0 0 1px rgba(255, 200, 180, 0.10),
-                        inset 0 1px 0 rgba(255,255,255,0.5);
+                        inset 0 1px 0 rgba(255, 255, 255, 0.5);
             border: 1px solid rgba(255, 215, 200, 0.20);
             text-align: center;
             animation: fadeInUp 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            pointer-events: auto;
         }
 
         @keyframes fadeInUp {
             0% {
                 opacity: 0;
-                transform: translateY(60px) scale(0.92);
+                transform: translate(-50%, -50%) scale(0.92) translateY(40px);
             }
             100% {
                 opacity: 1;
-                transform: translateY(0) scale(1);
+                transform: translate(-50%, -50%) scale(1) translateY(0);
             }
         }
 
         .center-card .icon-top {
-            font-size: 4.2rem;
+            font-size: 3.8rem;
             display: block;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
             animation: floatHeart 3.6s ease-in-out infinite;
         }
 
         @keyframes floatHeart {
-            0%, 100% { transform: translateY(0) scale(1); }
-            50% { transform: translateY(-14px) scale(1.05); }
+            0%,
+            100% {
+                transform: translateY(0) scale(1);
+            }
+            50% {
+                transform: translateY(-12px) scale(1.05);
+            }
         }
 
         .center-card h1 {
-            font-size: 2.2rem;
+            font-size: 2rem;
             color: #2a1212;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
             font-weight: 700;
             letter-spacing: -0.3px;
         }
@@ -171,17 +175,22 @@
         }
 
         @keyframes shimmerText {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
+            0%,
+            100% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
         }
 
         .center-card .sub {
-            font-size: 1.05rem;
+            font-size: 1rem;
             color: #7a4a4a;
             font-style: italic;
-            margin-bottom: 18px;
+            margin-bottom: 14px;
             border-top: 1px solid rgba(200, 160, 160, 0.15);
-            padding-top: 14px;
+            padding-top: 12px;
             display: inline-block;
         }
 
@@ -191,19 +200,24 @@
         }
 
         @keyframes pulseHeart {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.2); }
+            0%,
+            100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.2);
+            }
         }
 
         .center-card .message {
-            font-size: 1rem;
+            font-size: 0.95rem;
             line-height: 1.8;
             color: #3d2222;
             background: rgba(255, 240, 235, 0.30);
-            padding: 18px 20px;
+            padding: 16px 18px;
             border-radius: 30px;
             border-left: 3px solid #d4737a;
-            margin-bottom: 20px;
+            margin-bottom: 18px;
             font-style: italic;
         }
 
@@ -212,14 +226,14 @@
         }
 
         .btn-hearts {
-            padding: 14px 40px;
+            padding: 14px 20px;
             background: linear-gradient(135deg, #d4737a, #b84a4a, #d4737a);
             background-size: 200% 200%;
             border: none;
             border-radius: 60px;
             color: #fff;
             font-weight: 700;
-            font-size: 1.1rem;
+            font-size: 1rem;
             cursor: pointer;
             transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
             box-shadow: 0 10px 36px rgba(212, 115, 122, 0.28);
@@ -229,16 +243,22 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
+            gap: 10px;
+            pointer-events: auto;
         }
 
         @keyframes btnGlow {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
+            0%,
+            100% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
         }
 
         .btn-hearts:hover {
-            transform: translateY(-4px) scale(1.02);
+            transform: translateY(-3px) scale(1.02);
             box-shadow: 0 16px 48px rgba(212, 115, 122, 0.35);
         }
 
@@ -248,18 +268,18 @@
 
         .btn-hearts.secondary {
             background: linear-gradient(135deg, #b84a4a, #8a2a2a, #b84a4a);
-            margin-top: 12px;
+            margin-top: 10px;
         }
 
         .response-message {
-            margin-top: 18px;
-            padding: 16px 20px;
+            margin-top: 16px;
+            padding: 14px 18px;
             background: linear-gradient(145deg, #f0f7ee, #e6f0e4);
             border-radius: 40px;
             border: 1px solid rgba(100, 200, 120, 0.12);
             display: none;
             animation: fadePop 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
-            font-size: 1.05rem;
+            font-size: 1rem;
             color: #1a4a1a;
         }
 
@@ -268,22 +288,28 @@
         }
 
         @keyframes fadePop {
-            0% { opacity: 0; transform: scale(0.92) translateY(20px); }
-            100% { opacity: 1; transform: scale(1) translateY(0); }
+            0% {
+                opacity: 0;
+                transform: scale(0.92) translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
         }
 
         .response-message .big {
-            font-size: 2.6rem;
+            font-size: 2.4rem;
             display: block;
-            margin-bottom: 4px;
+            margin-bottom: 2px;
         }
 
         .footer {
-            margin-top: 22px;
-            font-size: 0.85rem;
+            margin-top: 18px;
+            font-size: 0.8rem;
             color: #8a6a6a;
             border-top: 1px solid rgba(200, 160, 160, 0.10);
-            padding-top: 18px;
+            padding-top: 14px;
             font-style: italic;
             letter-spacing: 0.3px;
         }
@@ -295,23 +321,24 @@
 
         @media (max-width: 480px) {
             .center-card {
-                padding: 32px 20px 32px;
+                padding: 28px 18px 28px;
                 border-radius: 44px;
-                width: 95%;
+                width: 92%;
+                max-width: 400px;
             }
             .center-card h1 {
-                font-size: 1.7rem;
+                font-size: 1.6rem;
             }
             .center-card .icon-top {
-                font-size: 3.4rem;
+                font-size: 3rem;
             }
             .center-card .message {
-                font-size: 0.9rem;
-                padding: 14px 16px;
+                font-size: 0.85rem;
+                padding: 12px 14px;
             }
             .btn-hearts {
-                font-size: 1rem;
-                padding: 14px 24px;
+                font-size: 0.9rem;
+                padding: 12px 18px;
             }
             .compliment-word {
                 font-size: 1.2rem !important;
@@ -320,10 +347,10 @@
 
         @media (max-width: 380px) {
             .center-card h1 {
-                font-size: 1.4rem;
+                font-size: 1.3rem;
             }
             .center-card .sub {
-                font-size: 0.9rem;
+                font-size: 0.85rem;
             }
             .compliment-word {
                 font-size: 1rem !important;
@@ -333,13 +360,13 @@
 </head>
 <body>
 
-    <!-- ОБЛАКО КОМПЛИМЕНТОВ -->
+    <!-- ===== ОБЛАКО КОМПЛИМЕНТОВ (ВЕСЬ ЭКРАН) ===== -->
     <div class="cloud-container" id="cloudContainer"></div>
 
-    <!-- ПАДАЮЩИЕ СЕРДЕЧКИ -->
+    <!-- ===== ПАДАЮЩИЕ СЕРДЕЧКИ ===== -->
     <div class="hearts-bg" id="heartsBg"></div>
 
-    <!-- ЦЕНТРАЛЬНАЯ КАРТОЧКА -->
+    <!-- ===== ЦЕНТРАЛЬНАЯ КАРТОЧКА ===== -->
     <div class="center-card">
         <span class="icon-top">💫</span>
         <h1>Облако <span class="accent">комплиментов</span></h1>
@@ -351,7 +378,7 @@
             <br>
             Просто смотри и улыбайся.
             <br><br>
-            <span style="font-size: 0.9rem; opacity: 0.7;">(наведи на слово — оно увеличится)</span>
+            <span style="font-size: 0.8rem; opacity: 0.7;">(наведи на слово — оно увеличится)</span>
         </div>
 
         <button class="btn-hearts" id="loveBtn">
@@ -366,7 +393,7 @@
             <span class="big">🥰</span>
             Ты — самое прекрасное, что есть в моей жизни!
             <br>
-            <span style="font-size: 0.9rem; opacity: 0.7;">Облако обновилось специально для тебя ❤️</span>
+            <span style="font-size: 0.85rem; opacity: 0.7;">Облако обновилось специально для тебя ❤️</span>
         </div>
 
         <div class="footer">
@@ -490,7 +517,7 @@
             ];
 
             // =============================================
-            //  ГЕНЕРАЦИЯ ОБЛАКА
+            //  ГЕНЕРАЦИЯ ОБЛАКА (ВЕСЬ ЭКРАН)
             // =============================================
             function generateCloud(words) {
                 const container = document.getElementById('cloudContainer');
@@ -503,41 +530,41 @@
                     [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
                 }
 
-                // Берём только первые 80 слов, чтобы не перегружать
-                const selected = shuffled.slice(0, 80);
+                // Берём до 100 слов для облака
+                const selected = shuffled.slice(0, 100);
 
                 selected.forEach((word) => {
                     const el = document.createElement('span');
                     el.className = 'compliment-word';
                     el.textContent = word;
 
-                    // Случайное положение
+                    // Случайное положение по ВСЕМУ экрану
                     const top = 2 + Math.random() * 94;
                     el.style.top = top + '%';
 
                     // Случайный размер
-                    const size = 1.2 + Math.random() * 2.8;
+                    const size = 1.2 + Math.random() * 3.0;
                     el.style.fontSize = size + 'rem';
 
-                    // Случайная задержка
-                    const delay = Math.random() * 20;
+                    // Случайная задержка старта
+                    const delay = Math.random() * 25;
                     el.style.animationDelay = delay + 's';
 
                     // Случайная скорость
-                    const duration = 22 + Math.random() * 28;
+                    const duration = 20 + Math.random() * 35;
                     el.style.animationDuration = duration + 's';
 
                     // Случайная прозрачность
-                    el.style.opacity = 0.15 + Math.random() * 0.35;
+                    el.style.opacity = 0.15 + Math.random() * 0.40;
 
                     // Случайный поворот
-                    const rotation = -12 + Math.random() * 24;
+                    const rotation = -15 + Math.random() * 30;
                     el.style.transform = `rotate(${rotation}deg)`;
 
-                    // Случайный цвет
+                    // Случайный цвет (оттенки розового/красного)
                     const hue = 330 + Math.random() * 30;
                     const lightness = 55 + Math.random() * 30;
-                    el.style.color = `hsla(${hue}, 75%, ${lightness}%, 0.45)`;
+                    el.style.color = `hsla(${hue}, 75%, ${lightness}%, 0.50)`;
 
                     container.appendChild(el);
                 });
@@ -551,14 +578,14 @@
             function createHearts() {
                 const container = document.getElementById('heartsBg');
                 const emojis = ['❤️', '♥️', '💕', '💖', '🌸', '✨'];
-                for (let i = 0; i < 30; i++) {
+                for (let i = 0; i < 35; i++) {
                     const el = document.createElement('span');
                     el.className = 'heart-float';
                     el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
                     el.style.left = Math.random() * 100 + '%';
                     el.style.fontSize = (0.8 + Math.random() * 1.6) + 'rem';
-                    el.style.animationDuration = (15 + Math.random() * 25) + 's';
-                    el.style.animationDelay = (Math.random() * 20) + 's';
+                    el.style.animationDuration = (14 + Math.random() * 28) + 's';
+                    el.style.animationDelay = (Math.random() * 22) + 's';
                     container.appendChild(el);
                 }
             }
@@ -582,7 +609,7 @@
             loveBtn.addEventListener('click', function(e) {
                 e.preventDefault();
 
-                // Перемешиваем и обновляем
+                // Перемешиваем и обновляем облако
                 const shuffled = [...currentCompliments];
                 for (let i = shuffled.length - 1; i > 0; i--) {
                     const j = Math.floor(Math.random() * (i + 1));
@@ -623,15 +650,12 @@
                 this.disabled = true;
 
                 setTimeout(() => {
-                    // Если приглашение в файле invite.html
                     window.location.href = 'invite.html';
-                    // Если приглашение в index.html (главная) — раскомментировать:
-                    // window.location.href = '/';
                 }, 800);
             });
 
             // =============================================
-            //  АДАПТАЦИЯ ПРИ ИЗМЕНЕНИИ РАЗМЕРА
+            //  АДАПТАЦИЯ
             // =============================================
             let resizeTimeout;
             window.addEventListener('resize', function() {
@@ -641,7 +665,7 @@
                 }, 600);
             });
 
-            console.log('❤️ Всё готово! Облако комплиментов работает!');
+            console.log('❤️ Всё готово! Облако комплиментов работает на весь экран!');
         })();
     </script>
 </body>
