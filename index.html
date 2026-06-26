@@ -24,8 +24,10 @@
             font-family: 'Georgia', 'Times New Roman', serif;
             position: relative;
             height: 100vh;
+            width: 100vw;
         }
 
+        /* ===== ОБЛАКО КОМПЛИМЕНТОВ ===== */
         .cloud-container {
             position: fixed;
             top: 0;
@@ -42,51 +44,37 @@
             font-weight: 700;
             user-select: none;
             white-space: nowrap;
-            animation: floatCloud linear infinite;
             font-family: 'Georgia', serif;
             text-shadow: 0 0 40px rgba(255, 100, 100, 0.15);
             transition: transform 0.3s ease, opacity 0.3s ease;
+            animation: floatCloud linear infinite;
         }
 
         .compliment-word:hover {
-            transform: scale(1.3) !important;
+            transform: scale(1.4) !important;
             opacity: 0.9 !important;
             cursor: default;
+            z-index: 10;
         }
 
         @keyframes floatCloud {
             0% {
-                transform: translateX(-15vw) rotate(-8deg) scale(0.7);
-                opacity: 0.05;
+                transform: translateX(-20vw) rotate(-10deg) scale(0.6);
+                opacity: 0;
             }
-            8% {
+            5% {
                 opacity: 0.4;
             }
-            92% {
+            95% {
                 opacity: 0.4;
             }
             100% {
-                transform: translateX(115vw) rotate(8deg) scale(1.2);
-                opacity: 0.05;
+                transform: translateX(120vw) rotate(10deg) scale(1.1);
+                opacity: 0;
             }
         }
 
-        .compliment-word:nth-child(odd) {
-            animation-duration: 28s;
-        }
-        .compliment-word:nth-child(even) {
-            animation-duration: 38s;
-        }
-        .compliment-word:nth-child(3n) {
-            animation-duration: 32s;
-        }
-        .compliment-word:nth-child(5n) {
-            animation-duration: 45s;
-        }
-        .compliment-word:nth-child(7n) {
-            animation-duration: 25s;
-        }
-
+        /* ===== ПАДАЮЩИЕ СЕРДЕЧКИ ===== */
         .hearts-bg {
             position: fixed;
             top: 0;
@@ -109,10 +97,13 @@
         @keyframes fall {
             0% {
                 transform: translateY(-10vh) rotate(0deg) scale(0.5);
-                opacity: 0.05;
+                opacity: 0;
             }
-            50% {
-                opacity: 0.2;
+            10% {
+                opacity: 0.15;
+            }
+            90% {
+                opacity: 0.15;
             }
             100% {
                 transform: translateY(110vh) rotate(720deg) scale(1.3);
@@ -120,6 +111,7 @@
             }
         }
 
+        /* ===== ЦЕНТРАЛЬНАЯ КАРТОЧКА ===== */
         .center-card {
             position: relative;
             z-index: 2;
@@ -254,19 +246,9 @@
             transform: translateY(0) scale(0.97);
         }
 
-        .footer {
-            margin-top: 22px;
-            font-size: 0.85rem;
-            color: #8a6a6a;
-            border-top: 1px solid rgba(200, 160, 160, 0.10);
-            padding-top: 18px;
-            font-style: italic;
-            letter-spacing: 0.3px;
-        }
-
-        .footer span {
-            animation: pulseHeart 2.6s ease-in-out infinite;
-            display: inline-block;
+        .btn-hearts.secondary {
+            background: linear-gradient(135deg, #b84a4a, #8a2a2a, #b84a4a);
+            margin-top: 12px;
         }
 
         .response-message {
@@ -294,6 +276,21 @@
             font-size: 2.6rem;
             display: block;
             margin-bottom: 4px;
+        }
+
+        .footer {
+            margin-top: 22px;
+            font-size: 0.85rem;
+            color: #8a6a6a;
+            border-top: 1px solid rgba(200, 160, 160, 0.10);
+            padding-top: 18px;
+            font-style: italic;
+            letter-spacing: 0.3px;
+        }
+
+        .footer span {
+            animation: pulseHeart 2.6s ease-in-out infinite;
+            display: inline-block;
         }
 
         @media (max-width: 480px) {
@@ -336,9 +333,13 @@
 </head>
 <body>
 
+    <!-- ОБЛАКО КОМПЛИМЕНТОВ -->
     <div class="cloud-container" id="cloudContainer"></div>
+
+    <!-- ПАДАЮЩИЕ СЕРДЕЧКИ -->
     <div class="hearts-bg" id="heartsBg"></div>
 
+    <!-- ЦЕНТРАЛЬНАЯ КАРТОЧКА -->
     <div class="center-card">
         <span class="icon-top">💫</span>
         <h1>Облако <span class="accent">комплиментов</span></h1>
@@ -357,8 +358,7 @@
             <span>💝</span> Показать ещё любви <span>💝</span>
         </button>
 
-        <!-- НОВАЯ КНОПКА — ПЕРЕХОД НА ПРИГЛАШЕНИЕ -->
-        <button class="btn-hearts" id="goToInviteBtn" style="margin-top: 12px; background: linear-gradient(135deg, #b84a4a, #8a2a2a, #b84a4a);">
+        <button class="btn-hearts secondary" id="goToInviteBtn">
             <span>💌</span> Перейти к приглашению <span>💌</span>
         </button>
 
@@ -376,6 +376,9 @@
 
     <script>
         (function() {
+            // =============================================
+            //  МАССИВ КОМПЛИМЕНТОВ
+            // =============================================
             const complimentsList = [
                 '❤️ Любимая',
                 '⭐ Ты — моя звезда',
@@ -486,75 +489,100 @@
                 '💖 Ты — моя мармеладка'
             ];
 
+            // =============================================
+            //  ГЕНЕРАЦИЯ ОБЛАКА
+            // =============================================
             function generateCloud(words) {
                 const container = document.getElementById('cloudContainer');
                 container.innerHTML = '';
 
+                // Перемешиваем
                 const shuffled = [...words];
                 for (let i = shuffled.length - 1; i > 0; i--) {
                     const j = Math.floor(Math.random() * (i + 1));
                     [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
                 }
 
-                shuffled.forEach((word, index) => {
+                // Берём только первые 80 слов, чтобы не перегружать
+                const selected = shuffled.slice(0, 80);
+
+                selected.forEach((word) => {
                     const el = document.createElement('span');
                     el.className = 'compliment-word';
                     el.textContent = word;
 
-                    const top = 3 + Math.random() * 92;
+                    // Случайное положение
+                    const top = 2 + Math.random() * 94;
                     el.style.top = top + '%';
 
-                    const size = 1.3 + Math.random() * 2.6;
+                    // Случайный размер
+                    const size = 1.2 + Math.random() * 2.8;
                     el.style.fontSize = size + 'rem';
 
-                    const delay = Math.random() * 25;
+                    // Случайная задержка
+                    const delay = Math.random() * 20;
                     el.style.animationDelay = delay + 's';
 
-                    const opacity = 0.15 + Math.random() * 0.35;
-                    el.style.opacity = opacity;
+                    // Случайная скорость
+                    const duration = 22 + Math.random() * 28;
+                    el.style.animationDuration = duration + 's';
 
-                    const rotation = -10 + Math.random() * 20;
+                    // Случайная прозрачность
+                    el.style.opacity = 0.15 + Math.random() * 0.35;
+
+                    // Случайный поворот
+                    const rotation = -12 + Math.random() * 24;
                     el.style.transform = `rotate(${rotation}deg)`;
 
+                    // Случайный цвет
                     const hue = 330 + Math.random() * 30;
                     const lightness = 55 + Math.random() * 30;
                     el.style.color = `hsla(${hue}, 75%, ${lightness}%, 0.45)`;
 
-                    if (index % 5 === 0) {
-                        el.style.animationDuration = (22 + Math.random() * 12) + 's';
-                    }
-
                     container.appendChild(el);
                 });
+
+                console.log('✨ Облако обновлено! Количество слов:', selected.length);
             }
 
+            // =============================================
+            //  ПАДАЮЩИЕ СЕРДЕЧКИ
+            // =============================================
             function createHearts() {
                 const container = document.getElementById('heartsBg');
                 const emojis = ['❤️', '♥️', '💕', '💖', '🌸', '✨'];
-                for (let i = 0; i < 25; i++) {
+                for (let i = 0; i < 30; i++) {
                     const el = document.createElement('span');
                     el.className = 'heart-float';
                     el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
                     el.style.left = Math.random() * 100 + '%';
-                    el.style.fontSize = (0.8 + Math.random() * 1.4) + 'rem';
+                    el.style.fontSize = (0.8 + Math.random() * 1.6) + 'rem';
                     el.style.animationDuration = (15 + Math.random() * 25) + 's';
                     el.style.animationDelay = (Math.random() * 20) + 's';
                     container.appendChild(el);
                 }
             }
 
+            // =============================================
+            //  ИНИЦИАЛИЗАЦИЯ
+            // =============================================
             let currentCompliments = [...complimentsList];
             generateCloud(currentCompliments);
             createHearts();
 
+            console.log('❤️ Облако комплиментов загружено! Количество комплиментов:', currentCompliments.length);
+
+            // =============================================
+            //  КНОПКА "ПОКАЗАТЬ ЕЩЁ ЛЮБВИ"
+            // =============================================
             const loveBtn = document.getElementById('loveBtn');
             const goToInviteBtn = document.getElementById('goToInviteBtn');
             const responseMessage = document.getElementById('responseMessage');
 
-            // Кнопка "Показать ещё любви"
             loveBtn.addEventListener('click', function(e) {
                 e.preventDefault();
 
+                // Перемешиваем и обновляем
                 const shuffled = [...currentCompliments];
                 for (let i = shuffled.length - 1; i > 0; i--) {
                     const j = Math.floor(Math.random() * (i + 1));
@@ -563,6 +591,7 @@
                 currentCompliments = shuffled;
                 generateCloud(currentCompliments);
 
+                // Показываем сообщение
                 responseMessage.classList.add('show');
                 responseMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
@@ -585,22 +614,25 @@
                 }, 4000);
             });
 
-            // Новая кнопка — переход на страницу с приглашением
+            // =============================================
+            //  КНОПКА "ПЕРЕЙТИ К ПРИГЛАШЕНИЮ"
+            // =============================================
             goToInviteBtn.addEventListener('click', function(e) {
                 e.preventDefault();
-
-                // Анимация перед переходом
                 this.innerHTML = '⏳ Загрузка...';
                 this.disabled = true;
 
                 setTimeout(() => {
-                    // Переход на страницу с приглашением
-                    // Если приглашение лежит в том же репозитории как index.html — просто переходим на главную
-                    // Или можно указать полный URL
-                    window.location.href = 'invite.html'; // или '/' если приглашение это index.html
+                    // Если приглашение в файле invite.html
+                    window.location.href = 'invite.html';
+                    // Если приглашение в index.html (главная) — раскомментировать:
+                    // window.location.href = '/';
                 }, 800);
             });
 
+            // =============================================
+            //  АДАПТАЦИЯ ПРИ ИЗМЕНЕНИИ РАЗМЕРА
+            // =============================================
             let resizeTimeout;
             window.addEventListener('resize', function() {
                 clearTimeout(resizeTimeout);
@@ -609,7 +641,7 @@
                 }, 600);
             });
 
-            console.log('❤️ Облако комплиментов для жены готово!');
+            console.log('❤️ Всё готово! Облако комплиментов работает!');
         })();
     </script>
 </body>
