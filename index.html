@@ -2,8 +2,8 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-    <title>Облако комплиментов ❤️</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Облако из комплиментов</title>
     <style>
         * {
             margin: 0;
@@ -17,294 +17,241 @@
             height: 100%;
             overflow: hidden;
             background: #1a0b0b;
-            background-image: radial-gradient(ellipse at 50% 50%, rgba(200, 80, 80, 0.08) 0%, transparent 70%);
             font-family: 'Georgia', 'Times New Roman', serif;
         }
 
-        /* ===== ОБЛАКО ===== */
-        .cloud-container {
-            position: fixed;
-            top: 0;
-            left: 0;
+        /* ===== ОБЛАКО (ВЕСЬ ЭКРАН) ===== */
+        .cloud {
+            position: relative;
             width: 100vw;
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            pointer-events: none;
-            z-index: 0;
         }
 
-        .cloud-wrapper {
-            position: relative;
-            width: 80vw;
-            height: 80vh;
-            max-width: 800px;
-            max-height: 600px;
-        }
-
-        .compliment-word {
+        /* ===== СЛОВА В ФОРМЕ ОБЛАКА ===== */
+        .word {
             position: absolute;
             font-weight: 700;
             user-select: none;
             white-space: nowrap;
             font-family: 'Georgia', serif;
-            text-shadow: 0 0 30px rgba(255, 100, 100, 0.10);
-            transition: transform 0.4s ease, opacity 0.4s ease;
-            animation: floatWord 6s ease-in-out infinite alternate;
-            will-change: transform, opacity;
+            text-shadow: 0 0 30px rgba(255, 100, 100, 0.08);
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            animation: floatWord 5s ease-in-out infinite alternate;
+            will-change: transform;
         }
 
-        .compliment-word:hover {
-            transform: scale(1.6) !important;
-            opacity: 0.9 !important;
-            cursor: default;
+        .word:hover {
+            transform: scale(1.5) !important;
+            opacity: 1 !important;
             z-index: 10;
-            transition: transform 0.2s ease, opacity 0.2s ease;
         }
 
-        /* ===== АНИМАЦИЯ ДЛЯ КАЖДОГО СЛОВА ===== */
         @keyframes floatWord {
             0% {
-                transform: translate(0px, 0px) scale(1);
-            }
-            33% {
-                transform: translate(8px, -12px) scale(1.05);
-            }
-            66% {
-                transform: translate(-6px, 10px) scale(0.95);
+                transform: translate(0px, 0px);
             }
             100% {
-                transform: translate(4px, -6px) scale(1.02);
+                transform: translate(4px, -6px);
             }
         }
 
-        /* ===== ПАДАЮЩИЕ СЕРДЕЧКИ (ЛЁГКИЙ ФОН) ===== */
-        .hearts-bg {
+        /* ===== НЕСКОЛЬКО СЕРДЕЧЕК (ЛЁГКИЙ ФОН) ===== */
+        .heart {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            pointer-events: none;
-            z-index: 0;
-            overflow: hidden;
-        }
-
-        .heart-float {
-            position: absolute;
-            font-size: 1.2rem;
-            opacity: 0.06;
+            font-size: 1rem;
+            opacity: 0.04;
             animation: fall linear infinite;
             user-select: none;
+            pointer-events: none;
+            z-index: 0;
         }
 
         @keyframes fall {
             0% {
-                transform: translateY(-10vh) rotate(0deg) scale(0.5);
+                transform: translateY(-10vh) rotate(0deg);
                 opacity: 0;
             }
             10% {
-                opacity: 0.08;
+                opacity: 0.05;
             }
             90% {
-                opacity: 0.08;
+                opacity: 0.05;
             }
             100% {
-                transform: translateY(110vh) rotate(720deg) scale(1.2);
+                transform: translateY(110vh) rotate(720deg);
                 opacity: 0;
-            }
-        }
-
-        /* ===== АДАПТИВ ===== */
-        @media (max-width: 600px) {
-            .cloud-wrapper {
-                width: 92vw;
-                height: 85vh;
-                max-width: 100%;
-                max-height: 100%;
             }
         }
     </style>
 </head>
 <body>
 
-    <!-- ===== ПАДАЮЩИЕ СЕРДЕЧКИ ===== -->
-    <div class="hearts-bg" id="heartsBg"></div>
+    <!-- ===== НЕСКОЛЬКО СЕРДЕЧЕК НА ФОНЕ ===== -->
+    <div id="hearts"></div>
 
     <!-- ===== ОБЛАКО ===== -->
-    <div class="cloud-container">
-        <div class="cloud-wrapper" id="cloudWrapper"></div>
-    </div>
+    <div class="cloud" id="cloud"></div>
 
     <script>
-        (function() {
-            // =============================================
-            //  КОМПЛИМЕНТЫ
-            // =============================================
-            const compliments = [
-                '❤️ Любимая', '⭐ Ты — моя звезда', '💖 Самая красивая',
-                '✨ Ты — свет', '🌺 Прекрасная', '💕 Моя радость',
-                '🌟 Самая лучшая', '💗 Неповторимая', '🌸 Нежная как цветок',
-                '❤️ Ты — моё сердце', '✨ Солнышко', '💖 Моя муза',
-                '⭐ Ты — мечта', '💕 Единственная', '❤️ Моя гордость',
-                '✨ Великолепная', '💖 Моя жизнь', '⭐ Неотразимая',
-                '🌸 Идеальная', '💕 Потрясающая', '❤️ Божественная',
-                '✨ Невероятная', '💖 Моя королева', '⭐ Самая нежная',
-                '🌸 Обаятельная', '💕 Сияющая', '❤️ Родная',
-                '✨ Удивительная', '💖 Мой ангел', '⭐ Чудесная',
-                '🌸 Вдохновение', '💕 Самая добрая', '❤️ Лучик света',
-                '✨ Магия', '💖 Страсть моя', '⭐ Лучшая жена',
-                '🌸 Моя вселенная', '💕 Ты — воздух', '❤️ Моя сказка',
-                '✨ Яркая', '💖 Искренняя', '⭐ Мой мир',
-                '🌸 Теплая', '💕 Ласковая', '❤️ Лучшая подруга',
-                '✨ Моя сила', '💖 Крылья', '⭐ Надежда',
-                '🌸 Уютная', '💕 Родная душа', '❤️ Красота',
-                '✨ Счастье', '💖 Моя отрада', '⭐ Мой цветочек',
-                '🌸 Моя конфетка', '💕 Моя булочка', '❤️ Лучшая жена на свете',
-                '✨ Ты — идеальная жена', '💖 Я горжусь тобой',
-                '⭐ С тобой я стал лучше', '🌸 Ты делаешь меня счастливым',
-                '💕 Ты — моя опора', '❤️ Ты — моя поддержка',
-                '✨ Спасибо, что ты есть', '💖 Ты — лучший подарок судьбы',
-                '⭐ Я каждый день влюбляюсь в тебя заново',
-                '🌸 Ты — моя главная награда', '💕 Ты — моя победа',
-                '❤️ Ты — мой тыл', '✨ Ты — мой фронт',
-                '💖 Без тебя я никто', '⭐ Ты — мой компас',
-                '🌸 Ты — мой путь', '💕 Ты — мой рассвет',
-                '❤️ Ты — мой закат', '✨ Ты — моя весна',
-                '💖 Ты — моё лето', '⭐ Ты — моя осень',
-                '🌸 Ты — моя зима', '💕 Ты — мой день',
-                '❤️ Ты — моя ночь', '✨ Ты — моя планета',
-                '💖 Ты — моя галактика', '⭐ Ты — всё',
-                '🌸 Ты — космос', '💕 Ты — магия',
-                '❤️ Ты — свет', '✨ Ты — тепло',
-                '💖 Ты — нежность', '⭐ Ты — страсть',
-                '🌸 Ты — жизнь', '💕 Ты — мир',
-                '❤️ Ты — сон', '✨ Ты — явь',
-                '💖 Ты — луч', '⭐ Ты — огонь',
-                '🌸 Ты — вода', '💕 Моя любимая жена',
-                '❤️ Ты — моя богиня', '✨ Ты — моя фея',
-                '💖 Ты — моя звёздочка', '⭐ Ты — моя ягодка',
-                '🌸 Ты — моя сладость', '💕 Ты — мой пряник',
-                '❤️ Ты — мой пирожок', '✨ Ты — мой зефир',
-                '💖 Ты — моя мармеладка', '⭐ Самая нежная',
-                '❤️ Мой ангел', '✨ Солнышко', '💖 Моя муза',
-                '🌸 Моя конфетка', '💕 Ты — воздух', '⭐ Моя сказка'
-            ];
+        // =============================================
+        //  КОМПЛИМЕНТЫ
+        // =============================================
+        const words = [
+            '❤️ Любимая', '⭐ Ты — моя звезда', '💖 Самая красивая',
+            '✨ Ты — свет', '🌺 Прекрасная', '💕 Моя радость',
+            '🌟 Самая лучшая', '💗 Неповторимая', '🌸 Нежная как цветок',
+            '❤️ Ты — моё сердце', '✨ Солнышко', '💖 Моя муза',
+            '⭐ Ты — мечта', '💕 Единственная', '❤️ Моя гордость',
+            '✨ Великолепная', '💖 Моя жизнь', '⭐ Неотразимая',
+            '🌸 Идеальная', '💕 Потрясающая', '❤️ Божественная',
+            '✨ Невероятная', '💖 Моя королева', '⭐ Самая нежная',
+            '🌸 Обаятельная', '💕 Сияющая', '❤️ Родная',
+            '✨ Удивительная', '💖 Мой ангел', '⭐ Чудесная',
+            '🌸 Вдохновение', '💕 Самая добрая', '❤️ Лучик света',
+            '✨ Магия', '💖 Страсть моя', '⭐ Лучшая жена',
+            '🌸 Моя вселенная', '💕 Ты — воздух', '❤️ Моя сказка',
+            '✨ Яркая', '💖 Искренняя', '⭐ Мой мир',
+            '🌸 Теплая', '💕 Ласковая', '❤️ Лучшая подруга',
+            '✨ Моя сила', '💖 Крылья', '⭐ Надежда',
+            '🌸 Уютная', '💕 Родная душа', '❤️ Красота',
+            '✨ Счастье', '💖 Моя отрада', '⭐ Мой цветочек',
+            '🌸 Моя конфетка', '💕 Моя булочка', '❤️ Лучшая жена на свете',
+            '✨ Ты — идеальная жена', '💖 Я горжусь тобой',
+            '⭐ С тобой я стал лучше', '🌸 Ты делаешь меня счастливым',
+            '💕 Ты — моя опора', '❤️ Ты — моя поддержка',
+            '✨ Спасибо, что ты есть', '💖 Ты — лучший подарок судьбы',
+            '⭐ Я каждый день влюбляюсь в тебя заново',
+            '🌸 Ты — моя главная награда', '💕 Ты — моя победа',
+            '❤️ Ты — мой тыл', '✨ Ты — мой фронт',
+            '💖 Без тебя я никто', '⭐ Ты — мой компас',
+            '🌸 Ты — мой путь', '💕 Ты — мой рассвет',
+            '❤️ Ты — мой закат', '✨ Ты — моя весна',
+            '💖 Ты — моё лето', '⭐ Ты — моя осень',
+            '🌸 Ты — моя зима', '💕 Ты — мой день',
+            '❤️ Ты — моя ночь', '✨ Ты — моя планета',
+            '💖 Ты — моя галактика', '⭐ Ты — всё',
+            '🌸 Ты — космос', '💕 Ты — магия',
+            '❤️ Ты — свет', '✨ Ты — тепло',
+            '💖 Ты — нежность', '⭐ Ты — страсть',
+            '🌸 Ты — жизнь', '💕 Ты — мир',
+            '❤️ Ты — сон', '✨ Ты — явь',
+            '💖 Ты — луч', '⭐ Ты — огонь',
+            '🌸 Ты — вода', '💕 Моя любимая жена',
+            '❤️ Ты — моя богиня', '✨ Ты — моя фея',
+            '💖 Ты — моя звёздочка', '⭐ Ты — моя ягодка',
+            '🌸 Ты — моя сладость', '💕 Ты — мой пряник',
+            '❤️ Ты — мой пирожок', '✨ Ты — мой зефир',
+            '💖 Ты — моя мармеладка', '⭐ Самая нежная',
+            '❤️ Мой ангел', '✨ Солнышко', '💖 Моя муза',
+            '🌸 Моя конфетка', '💕 Ты — воздух', '⭐ Моя сказка'
+        ];
 
-            // =============================================
-            //  СОЗДАНИЕ ОБЛАКА
-            // =============================================
-            function createCloud() {
-                const wrapper = document.getElementById('cloudWrapper');
-                wrapper.innerHTML = '';
+        // =============================================
+        //  СОЗДАНИЕ ОБЛАКА
+        // =============================================
+        function createCloud() {
+            const container = document.getElementById('cloud');
+            container.innerHTML = '';
 
-                const width = wrapper.offsetWidth || 800;
-                const height = wrapper.offsetHeight || 600;
+            const w = window.innerWidth;
+            const h = window.innerHeight;
 
-                // Центр облака
-                const centerX = width / 2;
-                const centerY = height / 2;
+            // Центр
+            const cx = w / 2;
+            const cy = h / 2;
 
-                // Размер облака (радиус)
-                const cloudRadiusX = width * 0.38;
-                const cloudRadiusY = height * 0.38;
+            // Радиус облака (от центра до краёв)
+            const rx = Math.min(w, h) * 0.38;
+            const ry = Math.min(w, h) * 0.32;
 
-                // Перемешиваем комплименты
-                const shuffled = [...compliments];
-                for (let i = shuffled.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-                }
-
-                // Берём все слова
-                const totalWords = shuffled.length;
-
-                shuffled.forEach((word, index) => {
-                    const el = document.createElement('span');
-                    el.className = 'compliment-word';
-                    el.textContent = word;
-
-                    // === РАСПРЕДЕЛЕНИЕ ПО ОБЛАКУ ===
-                    // Чем ближе к центру — тем больше слов
-                    const angle = Math.random() * Math.PI * 2;
-
-                    // Радиус с распределением: больше слов ближе к центру
-                    const r = Math.pow(Math.random(), 0.7) * Math.min(cloudRadiusX, cloudRadiusY);
-                    const x = centerX + Math.cos(angle) * r;
-                    const y = centerY + Math.sin(angle) * r * 0.85; // чуть сжато по вертикали
-
-                    // Случайный размер: от маленького к большому
-                    const size = 0.9 + Math.random() * 2.2;
-                    el.style.fontSize = size + 'rem';
-
-                    // Случайный поворот
-                    const rotation = -20 + Math.random() * 40;
-                    el.style.transform = `rotate(${rotation}deg)`;
-
-                    // Случайный цвет (оттенки розового)
-                    const hue = 330 + Math.random() * 30;
-                    const lightness = 55 + Math.random() * 30;
-                    el.style.color = `hsla(${hue}, 75%, ${lightness}%, 0.60)`;
-
-                    // Случайная прозрачность
-                    el.style.opacity = 0.3 + Math.random() * 0.40;
-
-                    // Случайная задержка анимации
-                    el.style.animationDelay = (Math.random() * 5) + 's';
-
-                    // Случайная скорость анимации
-                    const duration = 4 + Math.random() * 4;
-                    el.style.animationDuration = duration + 's';
-
-                    // Позиция
-                    el.style.left = (x / width * 100) + '%';
-                    el.style.top = (y / height * 100) + '%';
-                    el.style.transform += ` translate(-50%, -50%)`;
-
-                    wrapper.appendChild(el);
-                });
-
-                console.log('☁️ Облако создано! Слов:', totalWords);
+            // Перемешиваем
+            const shuffled = [...words];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
             }
 
-            // =============================================
-            //  ПАДАЮЩИЕ СЕРДЕЧКИ
-            // =============================================
-            function createHearts() {
-                const container = document.getElementById('heartsBg');
-                const emojis = ['❤️', '♥️', '💕', '💖', '🌸', '✨'];
-                for (let i = 0; i < 30; i++) {
-                    const el = document.createElement('span');
-                    el.className = 'heart-float';
-                    el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-                    el.style.left = Math.random() * 100 + '%';
-                    el.style.fontSize = (0.8 + Math.random() * 1.4) + 'rem';
-                    el.style.animationDuration = (15 + Math.random() * 25) + 's';
-                    el.style.animationDelay = (Math.random() * 20) + 's';
-                    container.appendChild(el);
-                }
+            shuffled.forEach((text) => {
+                const el = document.createElement('span');
+                el.className = 'word';
+                el.textContent = text;
+
+                // === ФОРМА ОБЛАКА ===
+                // Угол
+                const angle = Math.random() * Math.PI * 2;
+
+                // Радиус: плотнее к центру
+                const r = Math.pow(Math.random(), 0.6) * Math.min(rx, ry);
+                const x = cx + Math.cos(angle) * r * 1.1;
+                const y = cy + Math.sin(angle) * r * 0.85;
+
+                // Размер: от центра к краям — меньше
+                const distFromCenter = Math.sqrt(
+                    Math.pow((x - cx) / rx, 2) +
+                    Math.pow((y - cy) / ry, 2)
+                );
+                const size = 0.9 + (1 - distFromCenter * 0.5) * 1.8;
+                el.style.fontSize = Math.max(0.8, size) + 'rem';
+
+                // Прозрачность: центр ярче, края бледнее
+                const opacity = 0.35 + (1 - distFromCenter * 0.4) * 0.45;
+                el.style.opacity = Math.max(0.2, opacity);
+
+                // Цвет: оттенки розового
+                const hue = 330 + Math.random() * 30;
+                const lightness = 55 + (1 - distFromCenter) * 25;
+                el.style.color = `hsla(${hue}, 80%, ${lightness}%, 0.7)`;
+
+                // Поворот
+                const rotation = -15 + Math.random() * 30;
+                el.style.transform = `rotate(${rotation}deg)`;
+
+                // Анимация
+                const duration = 4 + Math.random() * 4;
+                el.style.animationDuration = duration + 's';
+                el.style.animationDelay = (Math.random() * 4) + 's';
+
+                // Позиция
+                el.style.left = x + 'px';
+                el.style.top = y + 'px';
+
+                container.appendChild(el);
+            });
+        }
+
+        // =============================================
+        //  СЕРДЕЧКИ НА ФОНЕ
+        // =============================================
+        function createHearts() {
+            const container = document.getElementById('hearts');
+            const emojis = ['❤️', '♥️', '💕', '💖'];
+            for (let i = 0; i < 20; i++) {
+                const el = document.createElement('span');
+                el.className = 'heart';
+                el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                el.style.left = Math.random() * 100 + '%';
+                el.style.fontSize = (0.6 + Math.random() * 1.2) + 'rem';
+                el.style.animationDuration = (18 + Math.random() * 25) + 's';
+                el.style.animationDelay = (Math.random() * 20) + 's';
+                container.appendChild(el);
             }
+        }
 
-            // =============================================
-            //  ЗАПУСК
-            // =============================================
-            createHearts();
+        // =============================================
+        //  ЗАПУСК
+        // =============================================
+        createHearts();
+        createCloud();
 
-            // Создаём облако после загрузки
-            window.addEventListener('load', function() {
-                setTimeout(createCloud, 100);
-            });
+        window.addEventListener('resize', () => {
+            clearTimeout(window._resizeTimer);
+            window._resizeTimer = setTimeout(createCloud, 300);
+        });
 
-            // Пересоздаём при изменении размера
-            let resizeTimeout;
-            window.addEventListener('resize', function() {
-                clearTimeout(resizeTimeout);
-                resizeTimeout = setTimeout(createCloud, 400);
-            });
-
-            console.log('☁️ Облако комплиментов готово! ❤️');
-        })();
+        console.log('☁️ Облако из комплиментов ❤️');
     </script>
 </body>
 </html>
